@@ -222,13 +222,15 @@ Every request, job, or user-initiated action must carry a **CorrelationId** — 
 - Generated at the entry point (API route handler, button click handler, task scheduler).
 
 ```typescript
-// TypeScript
-const correlationId = "c" + crypto.randomBytes(3).toString("hex");
+// TypeScript (Node.js built-in crypto module)
+import { randomBytes } from "crypto";
+const correlationId = "c" + randomBytes(3).toString("hex"); // e.g. "c3f9a1b"
 ```
 ```python
-# Python
-import random, string
-correlation_id = "c" + "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
+# Python — use secrets for cryptographically secure generation
+import secrets, string
+_alphabet = string.ascii_lowercase + string.digits
+correlation_id = "c" + "".join(secrets.choice(_alphabet) for _ in range(6))
 ```
 
 ### Error Handling
