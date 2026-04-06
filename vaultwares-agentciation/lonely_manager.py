@@ -33,11 +33,13 @@ class LonelyManager(ExtrovertAgent):
       - Publishes structured alerts to the Redis 'alerts' channel
     """
 
-    HEARTBEAT_CHECK_INTERVAL = 5  # seconds — checks every heartbeat cycle
-    UPDATE_REQUEST_INTERVAL = 60  # seconds — requests updates every minute
-    MAX_MISSED_HEARTBEATS = 5     # threshold before a LOST alert fires
-    ALERT_CHANNEL = "alerts"      # Redis channel for critical alerts
+    HEARTBEAT_CHECK_INTERVAL = 5   # seconds — checks every heartbeat cycle
+    UPDATE_REQUEST_INTERVAL = 60   # seconds — requests updates every minute
+    MAX_MISSED_HEARTBEATS = 5      # threshold before a LOST alert fires
+    ALERT_CHANNEL = "alerts"       # Redis channel for critical alerts
     REDIS_STATE_KEY = "lonely_manager:team_state"
+    REDIS_STATE_TTL = 300          # seconds before Redis state keys auto-expire
+    SILENCE_THRESHOLD = 120        # seconds of no update before realignment nudge
 
     def __init__(
         self,
@@ -173,7 +175,7 @@ class LonelyManager(ExtrovertAgent):
                         "missed_heartbeats": str(missed),
                     },
                 )
-                pipe.expire(key, 300)  # Auto-expire after 5 minutes of no updates
+                pipe.expire(key, self.REDIS_STATE_TTL)
             pipe.execute()
         except Exception:
             pass  # Redis write failures must not crash the monitor
@@ -215,7 +217,7 @@ class LonelyManager(ExtrovertAgent):
         details = {"description": description, **extra}
         self.coordinator.r.publish(
             self.coordinator.channel,
-            __import__('json').dumps({
+            json.dumps({
                 "agent": self.agent_id,
                 "action": "ASSIGN",
                 "task": task,
@@ -324,7 +326,7 @@ class LonelyManager(ExtrovertAgent):
         Review all tracked agents and nudge any that have gone quiet
         for more than 2 minutes without sending an update.
         """
-        cutoff = time.time() - 120  # 2-minute silence threshold
+        cutoff = time.time() - self.SILENCE_THRESHOLD
         for agent_id, update in self._agent_updates.items():
             if (
                 self._peer_registry.get(agent_id, {}).get("status")
