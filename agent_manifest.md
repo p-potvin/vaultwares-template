@@ -1,5 +1,8 @@
 # Agent Manifest
 
+> **Template version:** `vaultwares-template` — The Official Golden Template for all VaultWares repositories.
+> All agents operating in repositories derived from this template inherit the conventions, branding, and rules defined in [`CONTRIBUTING.md`](./CONTRIBUTING.md) and [`agents/branding.md`](./agents/branding.md).
+
 ## Multi-Agent Architecture
 
 This repository implements a Redis-based multi-agent coordination system.
