@@ -2,7 +2,7 @@
 
 Welcome! All VaultWares contributions — whether from Copilot, Gemini Code Assist, or a human developer — must meet the quality, security, and consistency bar described here. Read this document before writing or reviewing any code.
 
-> **Canonical copy:** This file mirrors [`.github/CONTRIBUTING.md`](./.github/CONTRIBUTING.md). Both files must be kept in sync.
+> **Source of truth:** This root-level file is the canonical copy. The file at [`.github/CONTRIBUTING.md`](./.github/CONTRIBUTING.md) is a secondary copy kept for GitHub's automatic discovery. When updating contribution guidelines, edit this file first, then sync `.github/CONTRIBUTING.md`.
 
 ---
 
