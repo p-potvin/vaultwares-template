@@ -68,6 +68,11 @@ The stack varies by project type. Choose the appropriate tier below.
 - **Secrets:** GCP Secret Manager. Access at runtime; never at build time.
 - **CI/CD:** GitHub Actions pipelines + Google Cloud Build for deployments.
 
+### Local TLS for API Consumers
+- If a project created from this template consumes the VaultWares API locally, default to `mkcert`-issued development certificates.
+- Prefer `https://localhost:8000` for the local API and `https://localhost:5174` for local Vite frontends unless the project has a stricter documented local port map.
+- Do not introduce new API-consuming local development flows that default to plaintext `http://localhost:*` when HTTPS is available.
+
 ---
 
 ## 🏗️ Folder Structure
